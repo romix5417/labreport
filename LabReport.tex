@@ -27,9 +27,11 @@
 \usepackage{cite}
 \usepackage{listings}
 \usepackage[framed,numbered,autolinebreaks,useliterate]{mcode} % 插入代码
+\usepackage{hyperref}
 \XeTeXlinebreaklocale "zh"
 \XeTeXlinebreakskip = 0pt plus 1pt minus 0.1pt
 
+\hypersetup{hidelinks}
 %---------------------------------------------------------------------
 %	页眉页脚设置
 %---------------------------------------------------------------------
@@ -75,6 +77,9 @@
 \titlecontents{subsection}[4em]{\vspace{0.1\baselineskip}\songti\zihao{-4}}{\thecontentslabel\ }{}
 {\hspace{.5em}\titlerule*[4pt]{$\cdot$}\contentspage}
 
+%---------------------------------------------------------------------
+%   生成大纲
+%---------------------------------------------------------------------
 
 \begin{document}
 %---------------------------------------------------------------------
@@ -146,10 +151,12 @@
 \section{实验工具}
 本实验采用NS3仿真评估软件作为仿真工具，NS3平台提供了一套完成的协议仿真与数据记录工具，能够有效的仿真协议行为并在接近理想环境下评估协
 议性能,需要了解更多详细信息可以参考NS3官方网站\cite{NS3.web}。
+
+模拟节点运动的工具采用的是NetAnim,可以模拟节点运行过程中的行为和链路的通断与连接。
 \section{实验设计}
 根据实验目的，本实验采用如图1.1所示实验拓扑，每架无人机之间设置间隔距离500m，1号、2号和3号飞机相对静止，0号飞机进入飞行集群编队，
-速度为20m/s,整个仿真过程60s，实时记录各个点之间通信报文并且每0.2秒打印一次每个节点的路由表变化情况，通过分析路由表变化记录可以得到
-路由切换数据和路由生成数据。
+速度为20m/s,整个仿真过程120s，实时记录各个点之间通信报文并且每0.2秒打印一次每个节点的路由表变化情况，通过分析路由表变化记录可以得到
+路由切换数据和路由生成数据。0号节点飞行的过程中一次会和1号、2号、3好节点相连接，路由也会有一个依次切换的过程。
 \begin{figure}[hbtp]
 	\centering
 	\includegraphics [width=0.8\textwidth]{figure//topo.png}
@@ -157,7 +164,22 @@
 \end{figure}
 
 \section{数据分析}
-根据仿真采集的路由表数据分析后可得如图1.2和图1.3所示数据记录。
+根据仿真采集的路由表数据分析后可得如图1.2所示数据记录,图中依次是node0到node3四个节点的路由表条目统计，又图中的路由项的变化可以很直
+观的看到路由逐条增加，即节点之间开始组网，最开始是1号、2号、3号节点相互组网，时间基本是一致的，都是在2.6s左右的时间开始形成路由，但
+是图中还是有路由异常变动的地方,已经用黑色的圆圈标识。
+\begin{figure}[hbtp]
+	\centering
+	\includegraphics [width=1.0\textwidth]{figure//Figure_1.png}
+	\caption{路由数据统计}\label{figure1}
+\end{figure}
+
+可以先来分析一下节点0出现的异常情况，针对异常变动点的时间找到了原文件中的路由变化如图1.3所示,在路由记录文件中可以看到节点0居然多出了
+一条路由,这条路由是节点0自己的路由，这应该是出现bug或者记录出错了，形成了环回路由
+\begin{figure}[hbtp]
+	\centering
+	\includegraphics [width=1.0\textwidth]{figure//0-1.png}
+	\caption{节点0异常变动点}\label{node0}
+\end{figure}
 \section{实验结论}
 
 \end{spacing}
