@@ -102,7 +102,7 @@ def proc_data(data0, data1, data2, data3):
     plt.show()
 
 def main():
-    filename = "routes.txt"
+    filename = "olsr_0.2shello_0.4stc.routes"
     data0, data1, data2, data3 = read_data(filename)
 
     proc_data(data0, data1, data2, data3)

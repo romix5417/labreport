@@ -28,6 +28,7 @@
 \usepackage{listings}
 \usepackage[framed,numbered,autolinebreaks,useliterate]{mcode} % 插入代码
 \usepackage{hyperref}
+\RequirePackage{tkz-network}
 \XeTeXlinebreaklocale "zh"
 \XeTeXlinebreakskip = 0pt plus 1pt minus 0.1pt
 
@@ -174,12 +175,45 @@
 \end{figure}
 
 可以先来分析一下节点0出现的异常情况，针对异常变动点的时间找到了原文件中的路由变化如图1.3所示,在路由记录文件中可以看到节点0居然多出了
-一条路由,这条路由是节点0自己的路由，这应该是出现bug或者记录出错了，形成了环回路由
+一条路由,这条路由是节点0自己的路由，这应该是出现bug或者记录出错了，形成了环回路由,这应该是错误的。
 \begin{figure}[hbtp]
 	\centering
 	\includegraphics [width=1.0\textwidth]{figure//0-1.png}
 	\caption{节点0异常变动点}\label{node0}
 \end{figure}
+
+
+针对异常的找到了对应的找到了节点1此时的路由，对比如图1.4所示。个点的路由变化从截图很容易看出来，1号点从与0好点直连切换到了与0号点的
+通信需要2号点做中继,但是这个路由切换非常迅速，在实验中采用的是0.2s打印一次路由表，对比结果可以看出来，在0.2s内路由便实现了切换,这个
+切换时间是很快的，已经达到了毫秒级,对应的我也画了下路由切换的拓扑图，如图1.5所示。
+\begin{figure}[hbtp]
+	\centering
+	\includegraphics [width=1.0\textwidth]{figure//2-1.png}
+	\caption{节点1路由变化}\label{node1}
+\end{figure}
+
+\begin{figure}[hbtp]
+\centering
+\begin{tikzpicture}
+    \Vertex[x=-1, y=-2]{A}
+    \Vertex[x=0]{B} \Vertex[x=2]{C} \Vertex[x=4]{D}
+    \Edge(A)(B) \Edge(B)(C) \Edge(C)(D)
+    \Vertex[x=8]{E} \Vertex[x=10]{F} \Vertex[x=12]{G}
+    \Vertex[x=10, y=-2]{H}
+    \Edge(E)(F) \Edge(F)(G) \Edge(F)(H)
+    \draw[line width=3pt, -latex](5, -1) -- (7, -1);
+
+	\Vertex[x=2, y=-6]{A}
+    \Vertex[x=0, y=-4]{B} \Vertex[x=2, y=-4]{C} \Vertex[x=4,y=-4]{D}
+    \Edge(A)(C) \Edge(B)(C) \Edge(C)(D)
+    \Vertex[x=8, y=-4]{E} \Vertex[x=10,y=-4]{F} \Vertex[x=12,y=-4]{G}
+    \Vertex[x=13, y=-6]{H}
+    \Edge(E)(F) \Edge(F)(G) \Edge(G)(H)
+    \draw[line width=3pt, -latex](5, -5) -- (7, -5);
+\end{tikzpicture}
+\caption{拓扑变化图}
+\end{figure}
+
 \section{实验结论}
 
 \end{spacing}
